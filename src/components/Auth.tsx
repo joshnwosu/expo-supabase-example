@@ -6,7 +6,7 @@ import { Button, Input } from "react-native-elements";
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loadind, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function signInWithEmail() {
     setLoading(true);
@@ -19,7 +19,7 @@ export default function Auth() {
     setLoading(false);
   }
 
-  async function SignUpWithEmail() {
+  async function signUpWithEmail() {
     setLoading(true);
     const { error } = await supabase.auth.signUp({
       email: email,
@@ -30,7 +30,44 @@ export default function Auth() {
     setLoading(false);
   }
 
-  return <View style={styles.container}>{/*  */}</View>;
+  return (
+    <View style={styles.container}>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Input
+          label="Email"
+          leftIcon={{ type: "font-awesome", name: "envelope" }}
+          onChangeText={setEmail}
+          value={email}
+          placeholder="email@address.com"
+          autoCapitalize="none"
+        />
+      </View>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Input
+          label="Password"
+          leftIcon={{ type: "font-awesome", name: "lock" }}
+          onChangeText={setPassword}
+          value={password}
+          placeholder="Password"
+          autoCapitalize="none"
+        />
+      </View>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Button
+          title={"Sign in"}
+          disabled={loading}
+          onPress={() => signInWithEmail()}
+        />
+      </View>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Button
+          title={"Sign up"}
+          disabled={loading}
+          onPress={() => signUpWithEmail()}
+        />
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
