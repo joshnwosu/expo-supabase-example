@@ -18,4 +18,15 @@ export default function Auth() {
     if (error) Alert.alert(error.message);
     setLoading(false);
   }
+
+  async function SignUpWithEmail() {
+    setLoading(true);
+    const { error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+
+    if (error) Alert.alert(error.message);
+    setLoading(false);
+  }
 }
