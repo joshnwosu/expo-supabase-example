@@ -29,4 +29,21 @@ export default function Auth() {
     if (error) Alert.alert(error.message);
     setLoading(false);
   }
+
+  return <View style={styles.container}>{/*  */}</View>;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 40,
+    padding: 12,
+  },
+  verticallySpaced: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    alignSelf: "stretch",
+  },
+  mt20: {
+    marginTop: 20,
+  },
+});
