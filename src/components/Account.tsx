@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabase";
 import { StyleSheet, View, Alert } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { Session } from "@supabase/supabase-js";
+import Avatar from "./Avatar";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -17,10 +18,10 @@ export default function Account({ session }: { session: Session }) {
   async function getProfile() {
     try {
       setLoading(true);
-      if (session?.user) throw new Error("No user on the session!");
+      if (!session?.user) throw new Error("No user on the session!");
 
       let { data, error, status } = await supabase
-        .from("profile")
+        .from("profiles")
         .select(`username, website, avatar_url`)
         .eq("id", session?.user.id)
         .single();
@@ -33,6 +34,7 @@ export default function Account({ session }: { session: Session }) {
         setUsername(data.username);
         SetWebsite(data.website);
         setAvatarUrl(data.avatar_url);
+        console.log("DATA: ", data);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -64,7 +66,7 @@ export default function Account({ session }: { session: Session }) {
         updated_at: new Date(),
       };
 
-      let { error } = await supabase.from("profile").upsert(updates);
+      let { error } = await supabase.from("profiles").upsert(updates);
 
       if (error) {
         throw error;
@@ -77,4 +79,66 @@ export default function Account({ session }: { session: Session }) {
       setLoading(false);
     }
   }
+
+  return (
+    <View style={styles.container}>
+      <View>
+        <Avatar
+          size={200}
+          url={avatarUrl}
+          onUpload={(url: string) => {
+            setAvatarUrl(url);
+            updateProfile({ username, website, avatar_url: url });
+          }}
+        />
+      </View>
+
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Input label="Email" value={session?.user?.email} />
+      </View>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Input
+          label="Username"
+          value={username || ""}
+          onChangeText={setUsername}
+        />
+      </View>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Input
+          label="Website"
+          value={website || ""}
+          onChangeText={SetWebsite}
+        />
+      </View>
+
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Button
+          title={loading ? "Loading..." : "Update"}
+          onPress={() =>
+            updateProfile({ username, website, avatar_url: avatarUrl })
+          }
+          disabled={loading}
+        />
+      </View>
+
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Button title={"Sign out"} onPress={() => supabase.auth.signOut()} />
+      </View>
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 40,
+    padding: 12,
+  },
+  verticallySpaced: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    alignSelf: "stretch",
+  },
+  mt20: {
+    marginTop: 20,
+  },
+});

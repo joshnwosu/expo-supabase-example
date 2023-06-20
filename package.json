@@ -11,9 +11,12 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.18.2",
     "@supabase/supabase-js": "^2.25.0",
+    "base64-arraybuffer": "^1.0.2",
     "expo": "~48.0.18",
+    "expo-document-picker": "~11.2.2",
     "expo-secure-store": "~12.1.1",
     "expo-status-bar": "~1.4.4",
+    "nanoid": "^4.0.2",
     "react": "18.2.0",
     "react-native": "0.71.8",
     "react-native-elements": "^3.4.3",
